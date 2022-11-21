@@ -38,14 +38,12 @@ const UniHeader = {
 };
 
 
-async function GetHTML (theme) {
-    let HTML = await CacheSpace.get("_theme_" + theme);
-    if (HTML){
-        HTML = JSON.parse(HTML);
-    } else {
+async function GetHTML () {
+    let HTML = await CacheSpace.get("HTMLCache");
+    if (!HTML) {
         HTML =
-            await fetch("https://github.com/kobe-koto/S/" + theme + ".json")
-                .then(res => res.json())
+            await fetch("https://raw.githubusercontent.com/kobe-koto/SiteMoved/main/pages/index.html")
+                .then(res => res.text())
                 .catch(()=>{})
         CacheSpace.put("HTMLCache", HTML);
     }

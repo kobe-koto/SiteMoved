@@ -26,7 +26,7 @@ async function SiteMoved (request) {
                 .replace(/%OldDomain/gi, url.hostname)
                 .replace(/%NewDomain/gi, DomainMap[url.hostname])
                 .replace(/%NewRequestUrl/gi, 
-                    request.url.replace((new RegExp("//"+url.hostname,"gi")), DomainMap[url.hostname])
+                    request.url.replace((new RegExp("//"+url.hostname,"gi")), "//"+DomainMap[url.hostname])
                 )
         })()
 

@@ -8,11 +8,11 @@ const DomainMap = {
 }
 
 addEventListener("fetch", event => {
-    event.respondWith(CounterMain(event.request));
+    event.respondWith(SiteMoved(event.request));
 })
 
 
-async function CounterMain (request) {
+async function SiteMoved (request) {
     let url = new URL(request.url);
 
     let HTML = await GetHTML();
@@ -22,10 +22,11 @@ async function CounterMain (request) {
             if (url.search.match(/debug/)) {
                 UniHeader["Cache-Control"] = "max-age=0, no-cache, no-store, must-revalidate"
             }
-            UniHeader["Content-Type"] = "application/json;charset=UTF-8"
             return HTML
                 .replace(/%OldDomain/gi, url.hostname)
-                .replace(/%NewDomain/gi, DomainMap[url.hostname])
+                .replace(/%NewRequestUrl/gi, 
+                    request.url.replace((new RegExp("//"+url.hostname,"gi")), DomainMap[url.hostname])
+                )
         })()
 
         , { headers: UniHeader, status:200 }

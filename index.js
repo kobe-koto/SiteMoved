@@ -15,11 +15,11 @@ addEventListener("fetch", event => {
 async function SiteMoved (request) {
     let url = new URL(request.url);
 
-    let HTML = await GetHTML();
+    let HTML = await GetHTML(!!url.search.match(/debug/i));
 
     return new Response(
         (function (){
-            if (url.search.match(/debug/)) {
+            if (url.search.match(/debug/i)) {
                 UniHeader["Cache-Control"] = "max-age=0, no-cache, no-store, must-revalidate"
             }
             return HTML
@@ -40,9 +40,9 @@ const UniHeader = {
 };
 
 
-async function GetHTML () {
+async function GetHTML (isUpdateHTML) {
     let HTML = await CacheSpace.get("HTMLCache");
-    if (!HTML) {
+    if (!HTML || isUpdateHTML) {
         HTML =
             await fetch("https://raw.githubusercontent.com/kobe-koto/SiteMoved/main/pages/index.html")
                 .then(res => res.text())
